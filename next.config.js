@@ -1,10 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {
-    NEXT_AWS_ACCESS_KEY_ID: process.env.NEXT_AWS_ACCESS_KEY_ID,
-    NEXT_AWS_SECRET_ACCESS_KEY: process.env.NEXT_AWS_SECRET_ACCESS_KEY,
-    NEXT_AWS_REGION: process.env.NEXT_AWS_REGION,
-    NEXT_AWS_BUCKET_NAME: process.env.NEXT_AWS_BUCKET_NAME,
+    NEXT_PUBLIC_AWS_ACCESS_KEY_ID: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
+    NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
+    NEXT_PUBLIC_AWS_REGION: process.env.NEXT_PUBLIC_AWS_REGION,
+    NEXT_PUBLIC_AWS_BUCKET_NAME: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
   },
   images: {
     domains: [
@@ -12,7 +12,8 @@ const nextConfig = {
       "s3.amazonaws.com",
       "rentinstant.s3.ca-central-1.amazonaws.com"
     ]
-  }
+  },
+  fallback: false,
 }
 
 module.exports = nextConfig

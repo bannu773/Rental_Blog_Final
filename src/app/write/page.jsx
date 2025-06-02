@@ -7,9 +7,12 @@ import "react-quill/dist/quill.bubble.css";
 import { useRouter } from "next/navigation";
 import { useAuth0 } from '@auth0/auth0-react';
 import { uploadToS3 } from "@/utils/s3";
-import ReactQuill from "react-quill";
+// import ReactQuill from "react-quill";
 import LoadingState from "@/components/LoadingState/LoadingState";
 
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const WritePage = () => {
   const { isAuthenticated, isLoading: authLoading, user } = useAuth0();
   const router = useRouter();
@@ -23,7 +26,6 @@ const WritePage = () => {
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  console.log(process.env.NEXT_AWS_BUCKET_NAME)
 
   useEffect(() => {
     const upload = async () => {
