@@ -23,7 +23,7 @@ const WritePage = () => {
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  console.log(process.env.AWS_BUCKET_NAME)
+  console.log(process.env.NEXT_AWS_BUCKET_NAME)
 
   useEffect(() => {
     const upload = async () => {
