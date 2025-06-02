@@ -18,6 +18,7 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
+  fallback: false,
 }
 
 module.exports = nextConfig
