@@ -16,7 +16,7 @@ const Featured = () => {
           <h1 className={styles.postTitle}>Latest Updates & Rental Guides</h1>
           <p className={styles.postDesc}>
             Discover helpful guides, tips, and updates about our rental platform. Learn how to make the most 
-            of RentInstant's features, find best practices for renting items, and stay informed about our 
+            of RentInstant&apos;s features, find best practices for renting items, and stay informed about our 
             latest platform improvements and community initiatives.
           </p>
           <button className={styles.button}>Read Latest Posts</button>

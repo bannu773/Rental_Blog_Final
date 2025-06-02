@@ -21,7 +21,7 @@ const Footer = () => {
         </div>
         <p className={styles.desc}>
           Your go-to resource for everything about RentInstant. Find detailed guides, feature updates,
-          rental tips, and community stories. Stay informed about our platform's latest developments
+          rental tips, and community stories. Stay informed about our platform&apos;s latest developments
           and learn how to make the most of your rental experience.
         </p>
         <div className={styles.icons}>
