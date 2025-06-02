@@ -14,6 +14,7 @@ const nextConfig = {
     ]
   },
   fallback: false,
+  productionBrowserSourceMaps: true,
 }
 
 module.exports = nextConfig
