@@ -9,7 +9,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { uploadToS3 } from "@/utils/s3";
 import ReactQuill from "react-quill";
 import LoadingState from "@/components/LoadingState/LoadingState";
-import ErrorBoundary from "@/components/ErrorBoundary/ErrorBoundary";
 
 const WritePage = () => {
   const { isAuthenticated, isLoading: authLoading, user } = useAuth0();
@@ -148,11 +147,4 @@ const WritePage = () => {
   );
 };
 
-// Wrap the component with error boundary
-export default function WritePageWithErrorBoundary() {
-  return (
-    <ErrorBoundary>
-      <WritePage />
-    </ErrorBoundary>
-  );
-}
+export default WritePage;

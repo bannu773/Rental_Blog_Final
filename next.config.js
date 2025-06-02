@@ -10,15 +10,9 @@ const nextConfig = {
     domains: [
       "lh3.googleusercontent.com",
       "s3.amazonaws.com",
-      "rentinstant.s3.ca-central-1.amazonaws.com",
-      'localhost',
+      "rentinstant.s3.ca-central-1.amazonaws.com"
     ]
-  },
-  output: 'standalone',
-  experimental: {
-    serverActions: true,
-  },
-  fallback: false,
+  }
 }
 
 module.exports = nextConfig
