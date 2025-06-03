@@ -1,10 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: 'standalone', // Essential for serverless deployment
+  
   experimental: {
-    serverComponentsExternalPackages: ['@aws-sdk/client-s3'],
+    // External packages that should not be bundled (important for AWS SDK)
+    serverComponentsExternalPackages: [
+      '@aws-sdk/client-s3',
+      '@aws-sdk/s3-request-presigner',
+      '@aws-sdk/lib-storage'
+    ],
   },
- 
   env: {
     ACCESS_KEY_ID: process.env.ACCESS_KEY_ID,
     SECRET_ACCESS_KEY: process.env.SECRET_ACCESS_KEY,
