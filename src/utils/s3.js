@@ -3,10 +3,10 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 
 const s3Client = new S3Client({
-  region: process.env.NEXT_PUBLIC_AWS_REGION,
+  region: process.env.REGION,
   credentials: {
-    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY,
   },
 });
 
@@ -16,7 +16,7 @@ export const uploadToS3 = async (file, fileName) => {
   const fileBuffer = Buffer.from(buffer);
 
   const command = new PutObjectCommand({
-    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
+    Bucket: process.env.BUCKET_NAME,
     Key: fileName,
     Body: fileBuffer,
     ContentType: file.type,
@@ -24,7 +24,7 @@ export const uploadToS3 = async (file, fileName) => {
 
   try {
     await s3Client.send(command);
-    return `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${fileName}`;
+    return `https://${process.env.BUCKET_NAME}.s3.${process.env.REGION}.amazonaws.com/${fileName}`;
   } catch (error) {
     console.error("Error uploading to S3:", error);
     throw error;
@@ -33,7 +33,7 @@ export const uploadToS3 = async (file, fileName) => {
 
 export const getSignedDownloadUrl = async (key) => {
   const command = new GetObjectCommand({
-    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
+    Bucket: process.env.BUCKET_NAME,
     Key: key,
   });
 

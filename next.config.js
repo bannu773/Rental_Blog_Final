@@ -20,10 +20,10 @@ const nextConfig = {
     serverComponentsExternalPackages: [],
   },
   env: {
-    NEXT_PUBLIC_AWS_ACCESS_KEY_ID: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID,
-    NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY,
-    NEXT_PUBLIC_AWS_REGION: process.env.NEXT_PUBLIC_AWS_REGION,
-    NEXT_PUBLIC_AWS_BUCKET_NAME: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
+    ACCESS_KEY_ID: process.env.ACCESS_KEY_ID,
+    SECRET_ACCESS_KEY: process.env.SECRET_ACCESS_KEY,
+    REGION: process.env.REGION,
+    BUCKET_NAME: process.env.BUCKET_NAME,
     CUSTOM_DEBUG: process.env.NODE_ENV === 'development' ? 'true' : 'false',
   },
   images: {
