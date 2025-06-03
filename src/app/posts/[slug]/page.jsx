@@ -5,6 +5,8 @@ import Comments from "@/components/comments/Comments";
 import LoadingState from "@/components/LoadingState/LoadingState";
 import { Suspense } from "react";
 
+
+
 const getData = async (slug) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts/${slug}`, {
     cache: "no-store",
