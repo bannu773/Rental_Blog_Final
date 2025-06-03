@@ -6,7 +6,7 @@ import LoadingState from "../LoadingState/LoadingState";
 import { Suspense } from "react";
 
 const getData = async () => {
-  const res = await fetch("/api/categories", {
+  const res = await fetch("http://localhost:3000/api/categories", {
     cache: "no-store",
   });
 
