@@ -1,24 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  compress: process.env.NODE_ENV === 'production',
-  
-  // Generate source maps in development
-  webpack: (config, { dev, isServer }) => {
-    if (process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_DEBUG) {
-      config.devtool = 'source-map';
-    }
-    return config;
-  },
-  onDemandEntries: {
-    // Period (in ms) where the server will keep pages in the buffer
-    maxInactiveAge: 25 * 1000,
-    // Number of pages that should be kept simultaneously without being disposed
-    pagesBufferLength: 2,
-  },
+  output: 'standalone',
   experimental: {
-    // Show more detailed error messages
-    serverComponentsExternalPackages: [],
+    serverComponentsExternalPackages: ['@aws-sdk/client-s3'],
   },
+ 
   env: {
     ACCESS_KEY_ID: process.env.ACCESS_KEY_ID,
     SECRET_ACCESS_KEY: process.env.SECRET_ACCESS_KEY,

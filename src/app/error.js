@@ -11,6 +11,7 @@ export default function GlobalError({ error, reset }) {
         <p style={{ color: '#333', marginBottom: '2rem' }}>
           <strong>Error message:</strong> {error?.message || "An unexpected error occurred. Please try again later."}
         </p>
+        <p>error: {error?.stack}</p>
         {error?.digest && (
           <pre style={{ color: '#b71c1c', background: '#f8d7da', padding: '1rem', borderRadius: '4px', marginBottom: '2rem' }}>
             <strong>Digest:</strong> {error.digest}
