@@ -9,6 +9,7 @@ const AuthLinks = () => {
   const { isAuthenticated, logout, loginWithRedirect, user } = useAuth0();
 
   console.log(isAuthenticated)
+  console.log(process.env.NODE_ENV)
 
   return (
     <>
