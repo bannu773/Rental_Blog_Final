@@ -33,9 +33,15 @@ const WritePage = () => {
       
       setUploading(true);
       try {
-        const fileName = `${new Date().getTime()}-${file.name}`;
-        const url = await uploadToS3(file, fileName);
-        setMedia(url);
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+        if (!res.ok) throw new Error("Upload failed");
+        const data = await res.json();
+        setMedia(data.url);
       } catch (error) {
         console.error("Error uploading file:", error);
       } finally {
