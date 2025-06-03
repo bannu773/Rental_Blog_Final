@@ -4,7 +4,7 @@ import React from "react";
 import styles from "./menuPosts.module.css"
 
 const getData = async () => {
-  const res = await fetch("http://localhost:3000/api/posts?page=1", {
+  const res = await fetch("https://rental-blog-final-s2ob.vercel.app/api/posts?page=1", {
     cache: "no-store",
   });
 
