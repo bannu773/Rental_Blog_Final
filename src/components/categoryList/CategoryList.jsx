@@ -6,7 +6,7 @@ import LoadingState from "../LoadingState/LoadingState";
 import { Suspense } from "react";
 
 const getData = async () => {
-  const res = await fetch("https://rental-blog-final-s2ob.vercel.app/api/categories", {
+  const res = await fetch("${process.env.NEXT_PUBLIC_BACKEND_URL}/api/categories", {
     cache: "no-store",
   });
 
