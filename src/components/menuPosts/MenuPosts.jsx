@@ -4,7 +4,8 @@ import React from "react";
 import styles from "./menuPosts.module.css"
 
 const getData = async () => {
-  const res = await fetch(`https://rental-blog-final-s2ob-i32q761ar-bannu773s-projects.vercel.app//api/posts?page=1`, {
+  console.log("Fetching data from API");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/posts?page=1`, {
     cache: "no-store",
   });
 

@@ -12,7 +12,7 @@ yarn dev
 pnpm dev
 ```
 
-Open [https://rental-blog-final-s2ob-i32q761ar-bannu773s-projects.vercel.app/](https://rental-blog-final-s2ob-i32q761ar-bannu773s-projects.vercel.app/) with your browser to see the result.
+Open [${process.env.NEXT_PUBLIC_BACKEND_URL}](${process.env.NEXT_PUBLIC_BACKEND_URL}) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 

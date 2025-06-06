@@ -23,7 +23,7 @@ const fetcher = async (url) => {
 const Comments = ({ postSlug }) => {
   const { isAuthenticated, user } = useAuth0();
   const { data, mutate, isLoading } = useSWR(
-    `https://rental-blog-final-s2ob-i32q761ar-bannu773s-projects.vercel.app//api/comments?postSlug=${postSlug}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/comments?postSlug=${postSlug}`,
     fetcher
   );
 
