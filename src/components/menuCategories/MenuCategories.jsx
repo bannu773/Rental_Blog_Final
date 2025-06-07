@@ -1,31 +1,52 @@
+"use client";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./menuCategories.module.css";
 
+const colors = [
+  "#57c4ff31",
+  "#da85c731",
+  "#7fb88133",
+  "#ff795736",
+  "#ffb04f45",
+  "#5e4fff31"
+];
+
 const MenuCategories = () => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/categories");
+        if (!res.ok) throw new Error("Failed to fetch categories");
+        const data = await res.json();
+        setCategories(data);
+      } catch (err) {
+        setCategories([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+
   return (
     <div className={styles.categoryList}>
-      <Link
-        href="/blog?cat=style"
-        className={`${styles.categoryItem} ${styles.style}`}
-      >
-        Features
-      </Link>
-      <Link href="/blog" className={`${styles.categoryItem} ${styles.fashion}`}>
-        Blog
-      </Link>
-      <Link href="/blog" className={`${styles.categoryItem} ${styles.food}`}>
-        Updates
-      </Link>
-      <Link href="/blog" className={`${styles.categoryItem} ${styles.travel}`}>
-        Events
-      </Link>
-      <Link href="/blog" className={`${styles.categoryItem} ${styles.culture}`}>
-        Community
-      </Link>
-      <Link href="/blog" className={`${styles.categoryItem} ${styles.coding}`}>
-        Company
-      </Link>
+      {categories.map((cat, idx) => (
+        <Link
+          key={cat.slug}
+          href={`/blog?cat=${cat.slug}`}
+          className={styles.categoryItem}
+          style={{ backgroundColor: colors[idx % colors.length] }}
+        >
+          {cat.title}
+        </Link>
+      ))}
     </div>
   );
 };

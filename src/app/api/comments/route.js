@@ -2,9 +2,10 @@ import { getAuthSession } from "@/utils/auth";
 import connectDB from "@/utils/connect";
 import { Comment, User } from "@/models";
 import { NextResponse } from "next/server";
+import { withCORS } from "@/utils/cors";
 
 // GET ALL COMMENTS OF A POST
-export const GET = async (req) => {
+export const GET = withCORS(async (req) => {
   const { searchParams } = new URL(req.url);
   const postSlug = searchParams.get("postSlug");
 
@@ -35,10 +36,10 @@ export const GET = async (req) => {
       JSON.stringify({ message: "Something went wrong!" }), { status: 500 }
     );
   }
-};
+});
 
 // CREATE A COMMENT
-export const POST = async (req) => {
+export const POST = withCORS(async (req) => {
   try {
     await connectDB();
     const body = await req.json();
@@ -66,4 +67,4 @@ export const POST = async (req) => {
       JSON.stringify({ message: "Something went wrong!" }), { status: 500 }
     );
   }
-};
+});

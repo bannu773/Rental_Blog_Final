@@ -11,46 +11,47 @@ import { uploadToS3 } from "@/utils/s3";
 import LoadingState from "@/components/LoadingState/LoadingState";
 
 import dynamic from "next/dynamic";
+import { Select, Upload, message, Image as AntdImage } from "antd";
+import { PlusOutlined, PictureOutlined, LinkOutlined, VideoCameraOutlined } from '@ant-design/icons';
 
 const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 const WritePage = () => {
   const { isAuthenticated, isLoading: authLoading, user } = useAuth0();
   const router = useRouter();
 
-  const [open, setOpen] = useState(false);
-  const [file, setFile] = useState(null);
+  const [fileList, setFileList] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
   const [media, setMedia] = useState("");
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
   const [catSlug, setCatSlug] = useState("");
   const [uploading, setUploading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-
+  const [categories, setCategories] = useState([]);
+  const [catLoading, setCatLoading] = useState(true);
+  const [catError, setCatError] = useState(null);
 
   useEffect(() => {
-    const upload = async () => {
-      if (!file) return;
-      
-      setUploading(true);
+    // Fetch categories from API
+    const fetchCategories = async () => {
+      setCatLoading(true);
+      setCatError(null);
       try {
-        const formData = new FormData();
-        formData.append("file", file);
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-        if (!res.ok) throw new Error("Upload failed");
+        const res = await fetch("/api/categories");
+        if (!res.ok) throw new Error("Failed to fetch categories");
         const data = await res.json();
-        setMedia(data.url);
-      } catch (error) {
-        console.error("Error uploading file:", error);
+        setCategories(data);
+      } catch (err) {
+        setCatError("Could not load categories");
       } finally {
-        setUploading(false);
+        setCatLoading(false);
       }
     };
-
-    upload();
-  }, [file]);
+    fetchCategories();
+  }, []);
 
   if (authLoading) {
     return <LoadingState isLoading={true} />;
@@ -69,15 +70,60 @@ const WritePage = () => {
       .replace(/[\s_-]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
+  const handleCancel = () => setPreviewOpen(false);
+
+  const handlePreview = async (file) => {
+    setPreviewImage(file.url || file.thumbUrl);
+    setPreviewOpen(true);
+    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+  };
+
+  const handleChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
+    if (newFileList.length > 0) {
+      setSelectedFile(newFileList[0].originFileObj);
+    } else {
+      setSelectedFile(null);
+      setMedia("");
+    }
+  };
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
+
   const handleSubmit = async () => {
     setSubmitting(true);
+    let uploadedMedia = media;
     try {
+      // Only upload if a file is selected and not already uploaded
+      if (selectedFile && !fileList[0]?.response?.url) {
+        setUploading(true);
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+        if (!res.ok) throw new Error("Upload failed");
+        const data = await res.json();
+        uploadedMedia = data.url;
+        setMedia(data.url);
+        // Update fileList with uploaded url for preview
+        setFileList(prevList => prevList.map(f => ({ ...f, status: 'done', url: data.url, response: { url: data.url } })));
+        setUploading(false);
+      } else if (fileList[0]?.response?.url) {
+        uploadedMedia = fileList[0].response.url;
+      }
       const res = await fetch("/api/posts", {
         method: "POST",
         body: JSON.stringify({
           title,
           desc: value,
-          img: media,
+          img: uploadedMedia,
           slug: slugify(title),
           catSlug: catSlug || "style",
           userEmail: user.email
@@ -92,6 +138,7 @@ const WritePage = () => {
       console.error("Error creating post:", error);
     } finally {
       setSubmitting(false);
+      setUploading(false);
     }
   };
 
@@ -103,39 +150,51 @@ const WritePage = () => {
         className={styles.input}
         onChange={(e) => setTitle(e.target.value)}
       />
-      <select className={styles.select} onChange={(e) => setCatSlug(e.target.value)}>
-        <option value="style">style</option>
-        <option value="fashion">fashion</option>
-        <option value="food">food</option>
-        <option value="culture">culture</option>
-        <option value="travel">travel</option>
-        <option value="coding">coding</option>
-      </select>
+      {/* Category Select */}
+      {catLoading ? (
+        <div style={{marginBottom: '2rem', color: '#AD1E24', fontWeight: 500}}>Loading categories...</div>
+      ) : catError ? (
+        <div style={{marginBottom: '2rem', color: '#AD1E24', fontWeight: 500}}>{catError}</div>
+      ) : (
+        <Select
+          placeholder="Select a category"
+          value={catSlug || undefined}
+          onChange={setCatSlug}
+          style={{ width: '100%', maxWidth: 300, marginBottom: '1rem' }}
+          size="large"
+          options={categories.map(cat => ({
+            value: cat.slug,
+            label: cat.title
+          }))}
+        />
+      )}
+      <Upload
+        listType="picture-card"
+        fileList={fileList}
+        onPreview={handlePreview}
+        onChange={handleChange}
+        maxCount={1}
+        accept="image/*"
+        showUploadList={{
+          showPreviewIcon: true,
+          showRemoveIcon: true,
+          showDownloadIcon: false
+        }}
+      >
+        {fileList.length >= 1 ? null : uploadButton}
+      </Upload>
+      {previewImage && (
+        <AntdImage
+          wrapperStyle={{ display: 'none' }}
+          preview={{
+            visible: previewOpen,
+            onVisibleChange: (visible) => setPreviewOpen(visible),
+            afterOpenChange: (visible) => !visible && setPreviewImage(''),
+          }}
+          src={previewImage}
+        />
+      )}
       <div className={styles.editor}>
-        <button className={styles.button} onClick={() => setOpen(!open)}>
-          <Image src="/plus.png" alt="" width={16} height={16} />
-        </button>
-        {open && (
-          <div className={styles.add}>
-            <input
-              type="file"
-              id="image"
-              onChange={(e) => setFile(e.target.files[0])}
-              style={{ display: "none" }}
-            />
-            <button className={styles.addButton}>
-              <label htmlFor="image">
-                <Image src="/image.png" alt="" width={16} height={16} />
-              </label>
-            </button>
-            <button className={styles.addButton}>
-              <Image src="/external.png" alt="" width={16} height={16} />
-            </button>
-            <button className={styles.addButton}>
-              <Image src="/video.png" alt="" width={16} height={16} />
-            </button>
-          </div>
-        )}
         <ReactQuill
           className={styles.textArea}
           theme="bubble"

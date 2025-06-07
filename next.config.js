@@ -22,7 +22,8 @@ const nextConfig = {
       "lh3.googleusercontent.com",
       "s3.amazonaws.com",
       "rentinstant.s3.ca-central-1.amazonaws.com"
-    ]
+    ],
+
   },
   fallback: false,
   productionBrowserSourceMaps: true,
