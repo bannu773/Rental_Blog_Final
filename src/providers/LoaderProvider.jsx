@@ -1,41 +1,21 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Loader from "@/components/Loader/Loader";
+import React, { createContext, useContext, useState } from "react";
 
 const LoaderContext = createContext({ show: () => {}, hide: () => {}, loading: false });
 
 export const useLoader = () => useContext(LoaderContext);
 
 export const LoaderProvider = ({ children }) => {
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  useEffect(() => {
-    const handleStart = () => setLoading(true);
-    const handleStop = () => setLoading(false);
-
-    router.events?.on("routeChangeStart", handleStart);
-    router.events?.on("routeChangeComplete", handleStop);
-    router.events?.on("routeChangeError", handleStop);
-
-    return () => {
-      router.events?.off("routeChangeStart", handleStart);
-      router.events?.off("routeChangeComplete", handleStop);
-      router.events?.off("routeChangeError", handleStop);
-    };
-  }, [router]);
-
+  // Loader logic removed for instant navigation
   const value = {
-    show: () => setLoading(true),
-    hide: () => setLoading(false),
-    loading,
+    show: () => {},
+    hide: () => {},
+    loading: false,
   };
 
   return (
     <LoaderContext.Provider value={value}>
-      {loading && <Loader />}
       {children}
     </LoaderContext.Provider>
   );
